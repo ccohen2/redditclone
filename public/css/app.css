@@ -1,0 +1,143 @@
+/* page elements */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-style: montserrat;
+    font-weight: 100;
+}
+
+header {
+    color: #EDF2F4;
+    align-self: start;
+    padding: .5em 0em 0em 1em;
+    background-color: #2b2d42;
+    width: 100%;
+}
+
+header h1 {
+    letter-spacing: .2em;
+}
+
+
+
+
+/* posts */
+.postHolder {
+    width: 70%;
+}
+
+.post {
+    background-color: #edf2f4;
+    padding: 2em;
+    margin: 1em 0em;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post h2 {
+    color: #FB8F67;
+    letter-spacing: .1em;
+}
+
+.post p {
+    color: #2b2d42;
+    font-weight: 200;
+}
+
+.post footer{
+    color: #8d99ae;
+    font-weight: 100;
+}
+
+.postImg {
+    text-align: center;
+    margin: 0em 0em .5em 0em;
+}
+
+.postImg img {
+    width: 100%;
+}
+
+#postField {
+    width: 70%;
+}
+
+
+
+
+/* forms */
+#formHeader {
+    padding: .5em 0em 0em 1em;
+    margin: 2em auto .3em auto;
+    align-self: flex-start;
+    color: #2b2d42;
+    width: 80%;
+}
+
+form {
+    background-color: #EDF2F4;
+}
+
+form .form-group button {
+    width: 75px;
+}
+
+.form-group {
+    margin: .8em 2em;
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.form-group label {
+    flex-basis: 5em;
+    flex-shrink: 0;
+    flex-grow: 0;
+
+    padding: 0;
+}
+
+.form-group input {
+    flex-basis: content;
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.form-group input:focus-visible, .form-group textarea:focus-visible {
+    outline: none;
+}
+
+
+/* bootstrap overrides */
+.btn-primary {
+    background-color: #2b2d42;
+    border-color: #2b2d42;
+    color: #edf2f4;
+}
+
+.btn-primary:hover {
+    background-color: #3b3e5a;
+    border-color: #3b3e5a;
+    color: #edf2f4;
+}
+
+.btn-primary:focus {
+    background-color: #2b2d42;
+}
+
+.btn-danger{
+    background-color: #D90429;
+    border-color: #D90429;
+    color: #edf2f4;
+}
+
+.btn-danger:hover {
+    background-color: #e92344;
+    border-color: #e92344;
+    color: #edf2f4;
+}
+
+.btn-danger:focus {
+    background-color: #D90429;
+}

@@ -1,0 +1,88 @@
+
+#header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#header h1 {
+    font-size: 1.3em;
+    margin: 0 0 8px 0;
+}
+
+#header a {
+    font-size: 1.3em;
+    color: inherit;
+    font-style: inherit;
+    text-decoration: none;
+    text-align: right;
+    
+    margin: 0 16px 8px 0;
+
+    transition: all ease-in-out .5s;
+}
+
+header a:hover {
+    transform: scale(1.2) translateX(-3px);
+}
+
+.postHolder {
+    width: 95%;
+}
+
+.post {
+    cursor: default;
+}
+
+.post button {
+    margin-top: 10px;
+    padding: .2em 1em;
+}
+
+@media (min-width: 700px) {
+    .post {
+        position: relative;
+        width: 85%;
+        float: left;
+    }
+
+    .post .postImg {
+        float: right;
+        margin-left: 10px;
+        max-width: 50%;
+        text-align: right;
+    }
+
+    .post .postImg img {
+        width: auto;
+        max-width: 100%;
+        max-height: 500px;
+    }
+
+    .post #editBtn, .post .btn-group {
+        position: absolute;
+        left: 32px;
+        bottom: 32px;
+    }
+
+    .post form {
+        max-width: 47%;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    .post .postFooter {
+        margin-bottom: 60px;
+    }
+} 
+
+.post h2 {
+
+}
+
+.post .postText {
+
+}
+
+.post .postFooter {
+
+}
