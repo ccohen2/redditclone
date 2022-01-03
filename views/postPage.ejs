@@ -41,6 +41,8 @@
             <form action=<%= `${id}?_method=PATCH` %> method="post" id="editForm" style="display: none;">
                 <textarea class="form-control" name="text" id="editForm" rows="10"><%= page.text %> </textarea>
             </form>
+            <!-- dummy form for deleting post -->
+            <form action=<%= `${id}?_method=DELETE` %> method="post" id="deleteForm" style="display: none;"></form>
 
 
             <!-- Author -->
@@ -53,7 +55,7 @@
                 <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
                 <button type="button" class="btn btn-primary" id="cancelBtn">Cancel</button>
                 <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
-              </div>
+            </div>
         </article>
 
 
@@ -92,7 +94,6 @@
             <button type="submit" class="btn btn-primary">Post</button>
         </div>
         
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/js/view/app.js"></script>
     </form>
 </body>

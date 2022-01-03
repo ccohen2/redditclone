@@ -41,8 +41,5 @@ cancelBtn.addEventListener("click", (e) => {
 
 //delete button event
 deleteBtn.addEventListener("click", (e) => {
-    axios.delete(`http://localhost:3000/r/${subreddit}/${id}`)
-        .then((res) => {
-            if (res.data.res === 1) window.location = `http://localhost:3000/r/${subreddit}`; 
-        });
+    deleteForm.submit();
 });

@@ -49,12 +49,12 @@ const Post = mongoose.model('post', {
 const homePath = "http://localhost:3000";
 
 //NO REAL ERROR HANDLING YET
-Subreddit.findOne({name: "tennis"}).then(data => {
-    console.log(data);
-});
-Subreddit.findOne({name: "tenni"}).then(data => {
-    console.log(data);
-});
+// Subreddit.findOne({name: "tennis"}).then(data => {
+//     console.log(data);
+// });
+// Subreddit.findOne({name: "tenni"}).then(data => {
+//     console.log(data);
+// });
 
 //subreddit pages
 //home index route - working for db
@@ -130,8 +130,8 @@ app.patch("/r/:subreddit/:id", (req, res) => {
 app.delete("/r/:subreddit/:id", (req, res) => {
     const { subreddit, id } = req.params;
     Post.findByIdAndDelete(id)
-    .then(() => res.json({ "res": 1} ))
-    .catch(e => res.json({ "res": e}));
+    .then(() => res.redirect(`http://localhost:3000/r/${subreddit}`))
+    .catch(e => res.render("404", {"error": e, "message": "Error, unabled to delete post"}));
 });
 
 app.listen(3000, () => {
