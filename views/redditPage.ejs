@@ -43,7 +43,22 @@
                 <p class="postText"><%= post.text %></p>
 
                 <!-- Author -->
-                <footer class="postFooter">-<%= post.author %></footer>
+                <footer class="postFooter">-<%= post.author %>
+                    <% let currentDate = new Date() %>
+                    <!-- print years -->
+                    <!-- print months -->
+                    <!-- print days -->
+                    <% if (currentDate.getTime() - post.datePosted.getTime() >= 86400000) { %>
+                        <%= ` ${Math.floor((currentDate.getTime() - post.datePosted.getTime()) / 86400000) + 1} days ago` %>
+                    <!-- print hours -->
+                    <% } else if (currentDate.getTime() - post.datePosted.getTime() >= 3600000) { %>
+                        <%= ` ${Math.floor((currentDate.getTime() - post.datePosted.getTime()) / 3600000) + 1} hours ago` %>
+                    <!-- print minutes -->
+                    <% } else { %>
+                        <%= ` ${Math.floor((currentDate.getTime() - post.datePosted.getTime()) / 60000) + 1} minutes ago` %>
+                    <% } %>
+
+                </footer>
 
                 <!-- hidden anchor tag - used to link to post -->
                 <a href=<%= `${subreddit}/${post._id}` %> name="link"></a>

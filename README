@@ -1,1 +1,15 @@
 Reddit demo project - clone of reddit with similar functionality
+
+TODOS
+
+LONG TERM
+unlimited scrolling - client side db lookups
+home page for reddit - can go to subreddits from there and create new subreddits
+error handling - building webpages and update logic
+email updates / notifications when new post on subscribed subreddit
+
+SHORT TERM
+non-rush
+subscribe button
+last modified
+comments - array on post

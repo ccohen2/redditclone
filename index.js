@@ -1,10 +1,4 @@
-// TODOS
-// LONG TERM
-// unlimited scrolling - client side db lookups
-// home page for reddit - can go to subreddits from there and create new subreddits
-// error handling - building webpages and update logic
-// SHORT TERM
-// database inegration
+
 const express = require("express");
 const data = require("./posts.json"); //get rid of once done updating
 const path = require("path");
@@ -134,6 +128,7 @@ app.delete("/r/:subreddit/:id", (req, res) => {
     .catch(e => res.render("404", {"error": e, "message": "Error, unabled to delete post"}));
 });
 
+//starts server
 app.listen(3000, () => {
     console.log("Listening on port 3000");
 });
