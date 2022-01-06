@@ -23,13 +23,14 @@ mongoose.connect('mongodb://localhost:27017/RedditData')
 .then((data) => {console.log("CONNECTED")});//CHECK THIS IS HOW TO QUERY DATABASE});
 
 //initializes schema for subreddits and posts
-const Subreddit = mongoose.model('subreddit', { 
+const subRedditSchema = new mongoose.Schema({
     name: String, 
     subscribers: Number,
     description: String,
     posts: Array
 });
-const Post = mongoose.model('post', { 
+
+const postSchema = new mongoose.Schema({ 
     title: String,
     author: String,
     text: String,
@@ -38,6 +39,11 @@ const Post = mongoose.model('post', {
     datePosted: Date,
     lastModified: Date 
 });
+
+
+const Subreddit = mongoose.model('subreddit', subRedditSchema);
+
+const Post = mongoose.model('post', postSchema);
 
 //quick reference to root of website
 const homePath = "http://localhost:3000";
