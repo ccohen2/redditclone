@@ -20,14 +20,14 @@ app.set("views", path.join(__dirname, "/views"));
 
 //mongoose initialization - connects to subreddits and posts dbs
 mongoose.connect('mongodb://localhost:27017/RedditData')
-.then((data) => {console.log("CONNECTED")});//CHECK THIS IS HOW TO QUERY DATABASE});
+.then((data) => {console.log("CONNECTED")});
 
 //initializes schema for subreddits and posts
 const subRedditSchema = new mongoose.Schema({
     name: String, 
     subscribers: Number,
     description: String,
-    posts: Array
+    posts: [mongoose.ObjectId]
 });
 
 const postSchema = new mongoose.Schema({ 
@@ -35,7 +35,13 @@ const postSchema = new mongoose.Schema({
     author: String,
     text: String,
     img: String,
-    comments: Array,
+    comments: [{
+        _id: mongoose.ObjectId,
+        text: String,
+        author: String,
+        datePosted: Date,
+        lastModified: Date
+    }],
     datePosted: Date,
     lastModified: Date 
 });
@@ -46,7 +52,7 @@ const Subreddit = mongoose.model('subreddit', subRedditSchema);
 const Post = mongoose.model('post', postSchema);
 
 //quick reference to root of website
-const homePath = "http://localhost:3000";
+//const homePath = "http://localhost:3000";
 
 //NO REAL ERROR HANDLING YET
 // Subreddit.findOne({name: "tennis"}).then(data => {
@@ -56,7 +62,7 @@ const homePath = "http://localhost:3000";
 //     console.log(data);
 // });
 
-//subreddit pages
+//SUBREDDIT PAGES
 //home index route - working for db
 app.get("/r/:subreddit", (req, res) => {
     const { subreddit } = req.params;
@@ -87,7 +93,7 @@ app.get("/r/:subreddit", (req, res) => {
     
 });
 
-//post route - full reddit post - updated for db - working
+//new post post route - full reddit post - updated for db - working
 app.post("/r/:subreddit", (req, res) => {
     const { subreddit } = req.params;
     let body = req.body;
@@ -106,7 +112,10 @@ app.post("/r/:subreddit", (req, res) => {
         .catch(e => res.render("404", {"error": e, "message": "Error, unabled to complete post"}));//ERROR LANDING PAGE
 });
 
-//post pages
+
+
+
+//POST PAGES
 //view route - working for db
 app.get("/r/:subreddit/:id", (req, res) => {
     const { subreddit, id } = req.params;
@@ -114,8 +123,6 @@ app.get("/r/:subreddit/:id", (req, res) => {
     .then((page) => res.render("postPage", { "page": page, "subreddit": subreddit, "id": id }))
     .catch(e => res.render("404", {"error": e, "message": "Error, unabled to find post"}));//ERROR LANDING PAGE
 });
-
-//post route - comments
 
 //patch route - working for db
 app.patch("/r/:subreddit/:id", (req, res) => {
@@ -130,9 +137,32 @@ app.patch("/r/:subreddit/:id", (req, res) => {
 app.delete("/r/:subreddit/:id", (req, res) => {
     const { subreddit, id } = req.params;
     Post.findByIdAndDelete(id)
-    .then(() => res.redirect(`http://localhost:3000/r/${subreddit}`))
+    .then(() => res.redirect(`/r/${subreddit}`))
     .catch(e => res.render("404", {"error": e, "message": "Error, unabled to delete post"}));
 });
+
+//comment post route - creates new comment and appends it to post comment array
+app.post("/r/:subreddit/:id", async (req, res) => {
+    const {subreddit, id} = req.params;
+    const post = await Post.findById(id);
+    const body = req.body;
+    const curDate = new Date();
+    const comment = {
+        _id: new mongoose.Types.ObjectId(),
+        text: body.text,
+        author: body.username,
+        datePosted: curDate,
+        lastModified: curDate
+    };
+
+    post.comments.push(comment);
+    post.save();
+    res.render("postPage", { "page": post, "subreddit": subreddit, "id": id });
+});
+
+//comment edit route
+
+//comment delete route
 
 //starts server
 app.listen(3000, () => {

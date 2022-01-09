@@ -60,6 +60,34 @@
 
 
         <!-- comments -->
+        <main class="commentHolder">
+            <% for (let comment of page.comments) { %> 
+                <article class="post comment">
+                    <!-- Text -->
+                    <!-- viewing mode -->
+                    <p class="postText commentText"><%= comment.text %></p>
+                    <!-- editing mode -->
+                    <!-- <form action=<%= `${id}?_method=PATCH` %> method="post" id="editForm" style="display: none;">
+                        <textarea class="form-control" name="text" id="editForm" rows="10"><%= page.text %> </textarea>
+                    </form> -->
+                    <!-- dummy form for deleting post -->
+                    <!-- <form action=<%= `${id}?_method=DELETE` %> method="post" id="deleteForm" style="display: none;"></form> -->
+        
+        
+                    <!-- Author -->
+                    <footer class="postFooter">
+                        -<%= comment.author %>
+                    </footer>
+        
+                    <button class="btn btn-primary" id="editBtn">Edit</button>
+                    <div class="btn-group" role="group" aria-label="Save and Cancel" style="display: none;">
+                        <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+                        <button type="button" class="btn btn-primary" id="cancelBtn">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+                    </div>
+                </article>
+            <% } %> 
+
 
 </main>
        
@@ -69,33 +97,23 @@
     <div id="formHeader">
         <h2>New Comment</h2>
     </div>
-    <form id="postField" method="post" action=<%=`${subreddit}`%>>
+    <form id="postField" method="post" action=<%=`${id}`%>>
         <div class="form-group row">
             <label for="username">Username</label>
             <input class="form-control" type="text" name="username" placeholder="Enter Username">
         </div>
 
         <div class="form-group row">
-            <label for="title">Title</label>
-            <input class="form-control" type="text" name="title" placeholder="Enter Title">
-        </div>
-
-        <div class="form-group row">
-            <label for="imgSrc">Image</label>
-            <input class="form-control" type="url" name="imgSrc" placeholder="Enter Link to Image">
-        </div>
-
-        <div class="form-group row">
             <label for="text">Body</label>
-            <textarea class="form-control" name="text" placeholder="Enter Post Content" rows=10></textarea>
+            <textarea class="form-control" name="text" placeholder="Enter Comment" rows=10></textarea>
         </div>
 
         <div class="form-group row">
             <button type="submit" class="btn btn-primary">Post</button>
         </div>
-        
-        <script src="/js/view/app.js"></script>
     </form>
+    
+    <script src="/js/view/app.js"></script>
 </body>
 
 </html>
