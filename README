@@ -9,11 +9,12 @@ error handling - building webpages and update logic
 data validation - make sure input / submitted data is valid
 email updates / notifications when new post on subscribed subreddit
 search page for searching through subreddits - want related searches too, not just direct matches
+user log in - changes which posts can be edited - need to log in to post or gives guest name
 
 SHORT TERM
 non-rush
 subscribe button
-last modified
+add last modified
 comments - array on post
     post
     edit

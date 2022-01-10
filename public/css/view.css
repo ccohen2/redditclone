@@ -39,6 +39,7 @@ header a:hover {
 }
 
 @media (min-width: 700px) {
+    /* handles everything for posts */
     .post {
         position: relative;
         width: 85%;
@@ -58,7 +59,7 @@ header a:hover {
         max-height: 500px;
     }
 
-    .post #editBtn, .post .btn-group {
+    .post .editBtn, .post .btn-group {
         position: absolute;
         left: 32px;
         bottom: 32px;
@@ -72,6 +73,11 @@ header a:hover {
 
     .post .postFooter {
         margin-bottom: 60px;
+    }
+
+    /* comment overrides */
+    .comment form {
+        max-width: 100%;
     }
 } 
 

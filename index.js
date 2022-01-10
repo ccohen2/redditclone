@@ -127,7 +127,7 @@ app.get("/r/:subreddit/:id", (req, res) => {
 //patch route - working for db
 app.patch("/r/:subreddit/:id", (req, res) => {
     const { subreddit, id } = req.params;
-    Post.findByIdAndUpdate(id, {text: req.body.text})
+    Post.findByIdAndUpdate(id, {text: req.body.text}).exec()
     .then(() => res.redirect(`${id}`))
     .catch(e => res.render("404", {"error": e, "message": "Error, unabled to edit post"}));
     
@@ -161,8 +161,36 @@ app.post("/r/:subreddit/:id", async (req, res) => {
 });
 
 //comment edit route
+app.patch("/r/:subreddit/:id/:commentIndex", async (req, res) => {
+    //gets data from db
+    const {subreddit, id, commentIndex} = req.params;
+    const body = req.body;
+    const post = await Post.findById(id);
+
+    //updates comment
+    const curDate = new Date();
+    post.comments[commentIndex].text = body.text;
+    post.comments[commentIndex].lastModified = curDate;
+    post.save();
+
+    //redirct back to post
+    res.redirect(`/r/${subreddit}/${id}`);
+});
 
 //comment delete route
+app.delete("/r/:subreddit/:id/:commentIndex", async (req, res) => {
+    //gets data from db
+    const {subreddit, id, commentIndex} = req.params;
+    const body = req.body;
+    const post = await Post.findById(id);
+
+    //updates comment
+    post.comments.splice(commentIndex, 1);
+    post.save();
+
+    //redirect back to post
+    res.redirect(`/r/${subreddit}/${id}`)
+});
 
 //starts server
 app.listen(3000, () => {
