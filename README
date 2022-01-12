@@ -15,10 +15,6 @@ SHORT TERM
 non-rush
 subscribe button
 add last modified
-comments - array on post
-    post
-    edit
-    delete
 separate models / non direction stuff into separate file
 add seeds.js file for initial population of database
 change all express functions to async functions

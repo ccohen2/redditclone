@@ -77,6 +77,7 @@ header h1 {
 
 form {
     background-color: #EDF2F4;
+    border-radius: 5px;
     padding: 1em;
 }
 
@@ -107,6 +108,16 @@ form .form-group button {
 
 .form-group input:focus-visible, .form-group textarea:focus-visible {
     outline: none;
+}
+
+@media (max-width: 700px) {
+    .postHolder {
+        width: 95%;
+    }
+
+    #postField {
+        width: 95%;
+    }
 }
 
 

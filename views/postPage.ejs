@@ -59,8 +59,10 @@
         </article>
 
 
+
         <!-- comments -->
-        <main class="commentHolder">
+        <div class="commentHolder">
+            <h2>Comments</h2>
             <% let i = 0; %>
             <% for (let comment of page.comments) { %> 
                 <article class="post comment">
@@ -87,8 +89,13 @@
                         <button type="button" class="btn btn-danger deleteBtn">Delete</button>
                     </div>
                 </article>
+
+                <% if (i < page.comments.length - 1) { %>
+                    <div class="commentDivide"></div>
+                <% } %> 
             <% i++; %> 
             <% } %> 
+        </div>
 
 
 </main>
