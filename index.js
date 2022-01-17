@@ -5,6 +5,7 @@ const path = require("path");
 const { v4: uuid } = require("uuid");
 const methodOverride = require("method-override");
 const mongoose = require('mongoose');
+const { Post, Subreddit } = require("./required/schemas");
 
 //express initialization
 const app = express();
@@ -21,35 +22,6 @@ app.set("views", path.join(__dirname, "/views"));
 //mongoose initialization - connects to subreddits and posts dbs
 mongoose.connect('mongodb://localhost:27017/RedditData')
 .then((data) => {console.log("CONNECTED")});
-
-//initializes schema for subreddits and posts
-const subRedditSchema = new mongoose.Schema({
-    name: String, 
-    subscribers: Number,
-    description: String,
-    posts: [mongoose.ObjectId]
-});
-
-const postSchema = new mongoose.Schema({ 
-    title: String,
-    author: String,
-    text: String,
-    img: String,
-    comments: [{
-        _id: mongoose.ObjectId,
-        text: String,
-        author: String,
-        datePosted: Date,
-        lastModified: Date
-    }],
-    datePosted: Date,
-    lastModified: Date 
-});
-
-
-const Subreddit = mongoose.model('subreddit', subRedditSchema);
-
-const Post = mongoose.model('post', postSchema);
 
 //quick reference to root of website
 //const homePath = "http://localhost:3000";
