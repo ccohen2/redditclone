@@ -1,11 +1,10 @@
 
 const express = require("express");
-const data = require("./posts.json"); //get rid of once done updating
 const path = require("path");
-const { v4: uuid } = require("uuid");
 const methodOverride = require("method-override");
 const mongoose = require('mongoose');
 const { Post, Subreddit } = require("./required/schemas");
+const { ClientError } = require("./required/errors");
 
 //express initialization
 const app = express();
@@ -34,39 +33,75 @@ mongoose.connect('mongodb://localhost:27017/RedditData')
 //     console.log(data);
 // });
 
-//SUBREDDIT PAGES
-//home index route - working for db
-app.get("/r/:subreddit", (req, res) => {
-    const { subreddit } = req.params;
-    Subreddit.findOne({name: subreddit})
-    .then(page => {
-        //creates new subreddit if no subreddit found - CHANGE TO CANNOT FIND SUBREDDIT - MAKE NEW FORM ON REDDIT HOMEPAGE FOR MAKING SUBREDDIT
-        if (typeof (page) === typeof (null)) {
-            //no such page
-            // page = {
-            //     "name": `${subreddit[0].toUpperCase()}${subreddit.slice(1)} Subreddit`,
-            //     "subscribers": "N/A",
-            //     "description": `Subreddit about all things ${subreddit}`,
-            //     "posts": []
-            // }
-            // data[subreddit] = page;
-        }
-        //this should probably bet switched to a client side script? - should do research
-        //maybe build new request route and have axios request the info client side
-        //builds list of posts to display on page
-        Post.find({_id: page.posts}).sort({datePosted: -1})
-            .then(posts => { res.render("redditPage", { "page": page, "posts": posts, "subreddit": subreddit })})
-            .catch(e => res.render("404", {"error": e, "message": `Error, unabled to find subreddit ${subreddit}`}));
+//async wrapper function for error handling
+function asyncWrap(func) {
+    return function(req, res, next) {
+        func(req, res, next).catch(error => {
+            //if client error, parse through
+            if (error instanceof ClientError) {
+                next(error);
+            }
+            //if cast error, actually invalid id, create client error and pass through to error handling
+            else if (error.name === "CastError") {
+                let e = new ClientError(404, "Cannot find resource - invalid url", "N/A", "N/A");
+                e.stack = error.stack;
+                next(e);
+            }
+        });
+    }
+}
 
-        
-    }).catch(error => {
-        //implement error page
-    });
+
+
+
+
+
+
+
+
+
+//SUBREDDIT PAGES
+//home index route - working for asyncWrap
+app.get("/r/:subreddit", asyncWrap(async (req, res, next) => {
+    const { subreddit } = req.params;
+    let page = await Subreddit.findOne({name: subreddit})
+    //creates new subreddit if no subreddit found - CHANGE TO CANNOT FIND SUBREDDIT - MAKE NEW FORM ON REDDIT HOMEPAGE FOR MAKING SUBREDDIT
+    if (page === null) {
+        throw new ClientError(404, `Cannot find Subreddit ${subreddit} - maybe you should make it!`, "subreddit", "get");
+    }
     
-});
+    //gets posts and builds list of posts to view
+    let posts = await Post.find({_id: page.posts}).sort({datePosted: -1});
+    res.render("redditPage", { "page": page, "posts": posts, "subreddit": subreddit });  
+}));
+
+
+
+
+
+
+
+
+
+
+
+
+
+//POST PAGES
+//view route - working for db
+app.get("/r/:subreddit/:id", asyncWrap (async (req, res, next) => {
+    const { subreddit, id } = req.params;
+    let page = await Post.findById(id);
+    //if page isn't found, throw not found error
+    if (page === null) {
+        throw new ClientError(404, `Cannot find post ${id} - post does not exist`, "post", "get");
+    }
+
+    res.render("postPage", { "page": page, "subreddit": subreddit, "id": id });
+}));
 
 //new post post route - full reddit post - updated for db - working
-app.post("/r/:subreddit", (req, res) => {
+app.post("/r/:subreddit", asyncWrap(async (req, res, next) => {
     const { subreddit } = req.params;
     let body = req.body;
     let newPost = new Post ({
@@ -78,45 +113,52 @@ app.post("/r/:subreddit", (req, res) => {
         datePosted: new Date(),
         lastModified: new Date()
     });
-    newPost.save();
-    Subreddit.updateOne({name: subreddit}, {$addToSet: {posts: newPost._id}}).exec()
-        .then(() => res.redirect(`${subreddit}`))
-        .catch(e => res.render("404", {"error": e, "message": "Error, unabled to complete post"}));//ERROR LANDING PAGE
-});
+    //saves post
+    let finished = await newPost.save();
+    if (finished != newPost) {
+        throw new ClientError(404, `Unabled to complete post ${newPost._id} - server side error`, "post", "post");
+    }
 
+    //updates subreddit
+    finished = await Subreddit.updateOne({name: subreddit}, {$addToSet: {posts: newPost._id}});
+    if (finished.modifiedCount != 1) {
+        throw new ClientError(404, `Unable to update subreddit ${subreddit} with post id ${newPost._id} - server side error`, "subreddit", "patch");
+    }
 
-
-
-//POST PAGES
-//view route - working for db
-app.get("/r/:subreddit/:id", (req, res) => {
-    const { subreddit, id } = req.params;
-    Post.findById(id).exec()
-    .then((page) => res.render("postPage", { "page": page, "subreddit": subreddit, "id": id }))
-    .catch(e => res.render("404", {"error": e, "message": "Error, unabled to find post"}));//ERROR LANDING PAGE
-});
+    res.redirect(`${subreddit}`);
+}));
 
 //patch route - working for db
-app.patch("/r/:subreddit/:id", (req, res) => {
+app.patch("/r/:subreddit/:id", asyncWrap(async (req, res, next) => {
     const { subreddit, id } = req.params;
-    Post.findByIdAndUpdate(id, {text: req.body.text}).exec()
-    .then(() => res.redirect(`${id}`))
-    .catch(e => res.render("404", {"error": e, "message": "Error, unabled to edit post"}));
-    
-});
+    let post = await Post.findByIdAndUpdate(id, {text: req.body.text});
+    //throw error if no document found
+    if (post === null) {
+        throw new ClientError(404, `Unable to update ${id} - post does not exist`, "post", "patch");
+    }
+
+    res.redirect(`${id}`);
+}));
 
 //delete route
-app.delete("/r/:subreddit/:id", (req, res) => {
+app.delete("/r/:subreddit/:id", asyncWrap(async (req, res, next) => {
     const { subreddit, id } = req.params;
-    Post.findByIdAndDelete(id)
-    .then(() => res.redirect(`/r/${subreddit}`))
-    .catch(e => res.render("404", {"error": e, "message": "Error, unabled to delete post"}));
-});
+    let post = await Post.findByIdAndDelete(id);
+    if (post === null) {
+        throw new ClientError(404, `Unable to delete ${id} - post does not exist`, "post", "delete");
+    }
+
+    res.redirect(`/r/${subreddit}`);
+}));
 
 //comment post route - creates new comment and appends it to post comment array
-app.post("/r/:subreddit/:id", async (req, res) => {
+app.post("/r/:subreddit/:id", asyncWrap(async (req, res, next) => {
     const {subreddit, id} = req.params;
     const post = await Post.findById(id);
+    //checks post does exist
+    if (post === null) {
+        throw new ClientError(404, `Unable to find post ${id} - invalid url`, "post", "get");
+    }
     const body = req.body;
     const curDate = new Date();
     const comment = {
@@ -127,42 +169,83 @@ app.post("/r/:subreddit/:id", async (req, res) => {
         lastModified: curDate
     };
 
+    //updates post and checks update was successful
     post.comments.push(comment);
-    post.save();
+    let finished = await post.save();
+    if (finished != post) {
+        throw new ClientError(500, `Unabled to post comment ${comment._id} to ${post._id} - server side error`, "post", "post");
+    }
+
     res.render("postPage", { "page": post, "subreddit": subreddit, "id": id });
-});
+}));
 
 //comment edit route
-app.patch("/r/:subreddit/:id/:commentIndex", async (req, res) => {
+app.patch("/r/:subreddit/:id/:commentIndex", asyncWrap(async (req, res, next) => {
     //gets data from db
     const {subreddit, id, commentIndex} = req.params;
     const body = req.body;
     const post = await Post.findById(id);
+    //checks post does exist
+    if (post === null) {
+        throw new ClientError(404, `Unable to find post ${id} - invalid url`, "post", "get");
+    }
 
     //updates comment
     const curDate = new Date();
     post.comments[commentIndex].text = body.text;
     post.comments[commentIndex].lastModified = curDate;
-    post.save();
+    let finished = await post.save();
+    if (finished != post) {
+        throw new ClientError(500, `Unabled to update comment ${comment._id} to ${post._id} - server side error`, "post", "patch");
+    }
 
     //redirct back to post
     res.redirect(`/r/${subreddit}/${id}`);
-});
+}));
 
 //comment delete route
-app.delete("/r/:subreddit/:id/:commentIndex", async (req, res) => {
+app.delete("/r/:subreddit/:id/:commentIndex", async (req, res, next) => {
     //gets data from db
     const {subreddit, id, commentIndex} = req.params;
     const body = req.body;
     const post = await Post.findById(id);
+    //checks post does exist
+    if (post === null) {
+        throw new ClientError(404, `Unable to find post ${id} - invalid url`, "post", "get");
+    }
 
     //updates comment
     post.comments.splice(commentIndex, 1);
-    post.save();
+    let finished = await post.save();
+    if (finished != post) {
+        throw new ClientError(500, `Unabled to update comment ${comment._id} to ${post._id} - server side error`, "post", "patch");
+    }
 
     //redirect back to post
     res.redirect(`/r/${subreddit}/${id}`)
 });
+
+
+
+
+
+
+
+
+
+//error handling middleware
+app.use((error, req, res, next) => {
+    //implement error handling page
+    console.log(error.stack);
+    res.send(`${error.statusCode}: ${error.statusMessage}`);
+});
+
+
+
+
+
+
+
 
 //starts server
 app.listen(3000, () => {
