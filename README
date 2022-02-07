@@ -17,4 +17,3 @@ subscribe button
 add last modified
 separate models / non direction stuff into separate file
 add seeds.js file for initial population of database
-change all express functions to async functions
