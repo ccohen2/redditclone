@@ -2,9 +2,6 @@
 const express = require("express");
 const path = require("path");
 const methodOverride = require("method-override");
-const mongoose = require("./required/mongoose");
-const { Post, Subreddit } = require("./required/schemas");
-const { ClientError } = require("./required/errors");
 
 //routers
 const subredditRouter = require("./routes/subreddit");
