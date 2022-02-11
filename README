@@ -5,13 +5,18 @@ TODOS
 LONG TERM
 unlimited scrolling - client side db lookups
 home page for reddit - can go to subreddits from there and create new subreddits
-error handling - building webpages and update logic
+error handling - building webpages
 data validation - make sure input / submitted data is valid
 email updates / notifications when new post on subscribed subreddit
 search page for searching through subreddits - want related searches too, not just direct matches
-user log in - changes which posts can be edited - need to log in to post or gives guest name
+
 
 SHORT TERM
+implement flash error messages - remove weird res.sends for server side errors
+404 page
+user log in - changes which posts can be edited - need to log in to post or gives guest name
+    use cookies for guest accounts - need to migrate ownership once account is created
+
 non-rush
 subscribe button
 add last modified
