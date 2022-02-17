@@ -16,6 +16,8 @@ implement flash error messages - remove weird res.sends for server side errors
 404 page
 user log in - changes which posts can be edited - need to log in to post or gives guest name
     use cookies for guest accounts - need to migrate ownership once account is created
+handle bcyrpt erros
+make fields required for schemas and handle errors
 
 non-rush
 subscribe button

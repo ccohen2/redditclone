@@ -1,6 +1,8 @@
+const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 
 //initializes schema for subreddits and posts
+//Subreddit Schema
 const subRedditSchema = new mongoose.Schema({
     name: String, 
     subscribers: Number,
@@ -8,6 +10,7 @@ const subRedditSchema = new mongoose.Schema({
     posts: [mongoose.ObjectId]
 });
 
+//Post Schema
 const postSchema = new mongoose.Schema({ 
     title: String,
     author: String,
@@ -24,11 +27,30 @@ const postSchema = new mongoose.Schema({
     lastModified: Date 
 });
 
+//User Schema
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
+
+//need to handle bcyrpt errors
+userSchema.pre("save", async function(next) {
+    if (this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 12);
+    }
+    next();
+});
+
+
+//turns Schemas into Models
 const Subreddit = mongoose.model('subreddit', subRedditSchema);
 
 const Post = mongoose.model('post', postSchema);
 
+const User = mongoose.model('user', userSchema);
+
 module.exports = {
     "Subreddit": Subreddit,
-    "Post": Post
+    "Post": Post,
+    "User": User
 };
