@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
+const { ClientError } = require("../required/errors");
 
 //initializes schema for subreddits and posts
 //Subreddit Schema
@@ -27,6 +28,16 @@ const postSchema = new mongoose.Schema({
     lastModified: Date 
 });
 
+//vadiates user has authorization to alter post - throws error if not, otherwise returns true
+postSchema.methods.validateChange = function(user) {
+    if (user != this.author) {
+        throw new ClientError(403, "User does not have authorization", "post", "patch");
+    }
+
+    return true;
+}
+
+
 //User Schema
 const userSchema = new mongoose.Schema({
     username: String,
@@ -40,6 +51,8 @@ userSchema.pre("save", async function(next) {
     }
     next();
 });
+
+
 
 
 //turns Schemas into Models

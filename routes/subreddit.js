@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("../required/mongoose");
-const asyncWrap = require("../required/helperFunctions")
+const { asyncWrap } = require("../required/helperFunctions")
 const { ClientError } = require("../required/errors");
 const { Post, Subreddit } = require("../required/schemas");
 const postRouter = require("./post");

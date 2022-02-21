@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("../required/mongoose");
-const asyncWrap = require("../required/helperFunctions")
+const { asyncWrap, protect } = require("../required/helperFunctions")
 const { ClientError } = require("../required/errors");
 const { Post, Subreddit } = require("../required/schemas");
 const commentRouter = require("./comment");
 
 const router = express.Router({mergeParams: true});
+
 
 //view route - working for db
 router.get("/", asyncWrap (async (req, res, next) => {
@@ -20,12 +21,14 @@ router.get("/", asyncWrap (async (req, res, next) => {
 }));
 
 //patch route - working for db
-router.patch("/", asyncWrap(async (req, res, next) => {
+router.patch("/", protect("post", "patch"), asyncWrap(async (req, res, next) => {
     const { subreddit, id } = req.params;
-    let post = await Post.findByIdAndUpdate(id, {text: req.body.text});
+    let post = res.locals.item;
+    post.text = req.body.text;
+    let finished = await post.save();
     //throw error if no document found
-    if (post === null) {
-        throw new ClientError(404, `Unable to update ${id} - post does not exist`, "post", "patch");
+    if (finished != post) {
+        throw new ClientError(500, `Unable to update post ${id} - server side error`, "post", "patch");
     }
 
     res.redirect(`${id}`);

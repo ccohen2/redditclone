@@ -5,7 +5,7 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const { User } = require("./required/schemas");
 const { ClientError } = require("./required/errors");
-const asyncWrap = require("./required/helperFunctions");
+const { asyncWrap } = require("./required/helperFunctions");
 const bcrypt = require("bcrypt");
 
 
@@ -18,6 +18,8 @@ const app = express();
 
 //session settings and middlewear for authentication
 app.use(session({
+    resave: false,
+    saveUninitialized: false,
     secret: 'dont guess me'
 }));
 
@@ -103,7 +105,7 @@ app.get("/logout", (req, res, next) => {
 app.post("/logout", (req, res, next) => {
     try {
         //checks if user is logged in - if so logs them out
-        if (req.session.user !== null) {
+        if (req.session.user !== null ) {
             req.session.user = null;
         }
         else if (req.session.user === null) {
@@ -112,7 +114,7 @@ app.post("/logout", (req, res, next) => {
     } 
     //sets user to null - in case user variable in session hasn't been initialized
     catch {
-        req.session.user === null;
+        req.session.user = null;
         res.send("NOT LOGGED IN")
     }
 
