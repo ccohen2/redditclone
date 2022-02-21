@@ -75,7 +75,7 @@ app.post("/signup", asyncWrap(async (req, res, next) => {
 //user authentication
 //login
 app.get("/login", (req, res, next) => {
-    res.render("login.ejs");
+    res.render("login.ejs", {"query": req.query.q});
 });
 
 app.post("/login", asyncWrap(async (req, res, next) => {
@@ -94,15 +94,11 @@ app.post("/login", asyncWrap(async (req, res, next) => {
         res.send("Invalid username or password!!!");
     }
 
-    res.send("logged in!");
+    res.redirect(req.query.q);
 }));
 
 //logout
 app.get("/logout", (req, res, next) => {
-    res.render("logout");
-})
-
-app.post("/logout", (req, res, next) => {
     try {
         //checks if user is logged in - if so logs them out
         if (req.session.user !== null && typeof (req.session.user) !== "undefined") {
@@ -119,12 +115,14 @@ app.post("/logout", (req, res, next) => {
     }
 
     //redirect to home page with flash message
-    res.send("Successfully logged out");
+    res.redirect(req.query.q);
 });
 
+
+//test link for username
 app.get("/test", (req, res, next) => {
     res.send(`${req.session.user}`);
-})
+});
 
 
 

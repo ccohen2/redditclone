@@ -17,7 +17,11 @@ router.get("/", asyncWrap (async (req, res, next) => {
         throw new ClientError(404, `Cannot find post ${id} - post does not exist`, "post", "get");
     }
 
-    res.render("postPage", { "page": page, "subreddit": subreddit, "id": id });
+    res.render("postPage", { "page": page, 
+        "subreddit": subreddit, 
+        "id": id, 
+        "user": req.session.user, 
+        "originalUrl": `${req.originalUrl}`});
 }));
 
 //patch route - working for db
@@ -76,7 +80,7 @@ router.post("/", asyncWrap(async (req, res, next) => {
         throw new ClientError(500, `Unabled to post comment ${comment._id} to ${post._id} - server side error`, "post", "post");
     }
 
-    res.render("postPage", { "page": post, "subreddit": subreddit, "id": id });
+    res.redirect(`/r/${subreddit}/${id}`);
 }));
 
 

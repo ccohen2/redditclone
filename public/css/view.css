@@ -9,7 +9,11 @@
     margin: 0 0 8px 0;
 }
 
-#header a {
+#header div {
+    margin-bottom: 8px;
+}
+
+#header div a {
     font-size: 1.3em;
     color: inherit;
     font-style: inherit;
@@ -21,8 +25,8 @@
     transition: all ease-in-out .5s;
 }
 
-header a:hover {
-    transform: scale(1.2) translateX(-3px);
+#header div a:hover {
+    color: #8d99ae;
 }
 
 .postHolder {

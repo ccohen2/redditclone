@@ -15,10 +15,17 @@
 
 <body>
     <header id="header">
-            <h1>
-                <%= `r/${subreddit}/${id} Discussion` %>
-            </h1>
+        <h1>
+            <%= `r/${subreddit}/${id} Discussion` %>
+        </h1>
+        <div>
+            <% if (user === null || user === undefined) { %>
+                <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
+            <% } else { %>
+                <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
+            <% } %> 
             <a href=<%= `http://localhost:3000/r/${subreddit}` %> >Home</a>
+        </div>
     </header>
 
     <!-- Holds posts for page -->
@@ -37,10 +44,12 @@
             <!-- Text -->
             <!-- viewing mode -->
             <p class="postText"><%= page.text %></p>
-            <!-- editing mode -->
-            <form action=<%= `${id}?_method=PATCH` %> method="post" class="editForm" style="display: none;">
-                <textarea class="form-control" name="text" rows="10"><%= page.text %> </textarea>
-            </form>
+            <!-- editing mode - only included if author matches user -->
+            <% if (user === page.author) { %> 
+                <form action=<%= `${id}?_method=PATCH` %> method="post" class="editForm" style="display: none;">
+                    <textarea class="form-control" name="text" rows="10"><%= page.text %> </textarea>
+                </form>
+            <% } %> 
             <!-- dummy form for deleting post -->
             <form action=<%= `${id}?_method=DELETE` %> method="post" class="deleteForm" style="display: none;"></form>
 
@@ -50,12 +59,15 @@
                 -<%= page.author %>
             </footer>
 
-            <button class="btn btn-primary editBtn">Edit</button>
-            <div class="btn-group" role="group" aria-label="Save and Cancel" style="display: none;">
-                <button type="button" class="btn btn-primary saveBtn">Save</button>
-                <button type="button" class="btn btn-primary cancelBtn">Cancel</button>
-                <button type="button" class="btn btn-danger deleteBtn">Delete</button>
-            </div>
+            <!-- only includes edit buttons if author matches user -->
+            <% if (user === page.author) { %> 
+                <button class="btn btn-primary editBtn">Edit</button>
+                <div class="btn-group" role="group" aria-label="Save and Cancel" style="display: none;">
+                    <button type="button" class="btn btn-primary saveBtn">Save</button>
+                    <button type="button" class="btn btn-primary cancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-danger deleteBtn">Delete</button>
+                </div>
+            <% } %> 
         </article>
 
 
@@ -69,10 +81,12 @@
                     <!-- Text -->
                     <!-- viewing mode -->
                     <p class="postText commentText"><%= comment.text %></p>
-                    <!-- editing mode -->
-                    <form action=<%= `${id}/${i}?_method=PATCH` %> method="post" class="editForm" style="display: none;">
-                        <textarea class="form-control" name="text" rows="10"><%= comment.text %> </textarea>
-                    </form>
+                    <!-- editing mode - only included if author matches user -->
+                    <% if (user === page.author) { %> 
+                        <form action=<%= `${id}/${i}?_method=PATCH` %> method="post" class="editForm" style="display: none;">
+                            <textarea class="form-control" name="text" rows="10"><%= comment.text %> </textarea>
+                        </form>
+                    <% } %> 
                     <!-- dummy form for deleting post -->
                     <form action=<%= `${id}/${i}?_method=DELETE` %> method="post" class="deleteForm" style="display: none;"></form>
         
@@ -82,12 +96,15 @@
                         -<%= comment.author %>
                     </footer>
         
-                    <button class="btn btn-primary editBtn">Edit</button>
-                    <div class="btn-group" role="group" aria-label="Save and Cancel" style="display: none;">
-                        <button type="button" class="btn btn-primary saveBtn">Save</button>
-                        <button type="button" class="btn btn-primary cancelBtn">Cancel</button>
-                        <button type="button" class="btn btn-danger deleteBtn">Delete</button>
-                    </div>
+                    <!-- only includes edit buttons if author matches user -->
+                    <% if (user === comment.author) { %> 
+                        <button class="btn btn-primary editBtn">Edit</button>
+                        <div class="btn-group" role="group" aria-label="Save and Cancel" style="display: none;">
+                            <button type="button" class="btn btn-primary saveBtn">Save</button>
+                            <button type="button" class="btn btn-primary cancelBtn">Cancel</button>
+                            <button type="button" class="btn btn-danger deleteBtn">Delete</button>
+                        </div>
+                    <% } %> 
                 </article>
 
                 <% if (i < page.comments.length - 1) { %>
