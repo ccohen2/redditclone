@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("../required/mongoose");
-const { asyncWrap } = require("../required/helperFunctions")
+const { asyncWrap, protect } = require("../required/helperFunctions")
 const { ClientError } = require("../required/errors");
 const { Post, Subreddit } = require("../required/schemas");
 
@@ -8,15 +8,11 @@ const router = express.Router({mergeParams: true});
 
 
 //comment edit route
-router.patch("/", asyncWrap(async (req, res, next) => {
+router.patch("/", protect("comment", "patch"), asyncWrap(async (req, res, next) => {
     //gets data from db
     const {subreddit, id, commentIndex} = req.params;
     const body = req.body;
-    const post = await Post.findById(id);
-    //checks post does exist
-    if (post === null) {
-        throw new ClientError(404, `Unable to find post ${id} - invalid url`, "post", "get");
-    }
+    const post = res.locals.item;
 
     //updates comment
     const curDate = new Date();
@@ -32,15 +28,11 @@ router.patch("/", asyncWrap(async (req, res, next) => {
 }));
 
 //comment delete route
-router.delete("/", async (req, res, next) => {
+router.delete("/", protect("comment", "delete"), async (req, res, next) => {
     //gets data from db
     const {subreddit, id, commentIndex} = req.params;
     const body = req.body;
-    const post = await Post.findById(id);
-    //checks post does exist
-    if (post === null) {
-        throw new ClientError(404, `Unable to find post ${id} - invalid url`, "post", "get");
-    }
+    const post = res.locals.item;
 
     //updates comment
     post.comments.splice(commentIndex, 1);

@@ -28,13 +28,24 @@ const postSchema = new mongoose.Schema({
     lastModified: Date 
 });
 
-//vadiates user has authorization to alter post - throws error if not, otherwise returns true
-postSchema.methods.validateChange = function(user) {
-    if (user != this.author) {
-        throw new ClientError(403, "User does not have authorization", "post", "patch");
+//helper function for finding comment of given post - used by protect helper function
+postSchema.statics.getComment = async function([postId, commentIndex]) {
+    const post = await this.findById(postId);
+    //checks post exists
+    if (post === null) {
+        throw new ClientError(404, `Cannot find post ${postId} - invalid url`, "post", "get");
+    }
+    //checks comment exists
+    if (commentIndex >= post.comments.length) {
+        throw new ClientError(404, `Cannont find comment ${commentIndex} - no such comment`, "comment", "get");
     }
 
-    return true;
+    //package post in return to reduce lookups
+    return {
+        author: post.comments[commentIndex].author, 
+        post: post
+    };
+
 }
 
 

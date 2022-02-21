@@ -29,21 +29,23 @@ function protect(schemaName, method) {
     //dependent on req
     const schema = {
         subreddit: Subreddit,
-        post: Post
+        post: Post,
+        comment: Post
     }[schemaName];
 
     const lookup = {
         subreddit: "findOne",
-        post: "findById"
+        post: "findById",
+        comment: "getComment"
     }[schemaName];
 
     //return function
     return asyncWrap(async function(req, res, next) {
-
         //sets options and error message
         const options = {
             subreddit: {name: req.params.subreddit},
-            post: req.params.id
+            post: req.params.id,
+            comment: [req.params.id, req.params.commentIndex]
         }[schemaName];
 
         const { message, level } = {
@@ -54,6 +56,10 @@ function protect(schemaName, method) {
             post: {
                 message: `post ${req.params.post}`,
                 level: "post"
+            },
+            comment: {
+                message: `comment ${req.params.commentIndex} of post ${req.params.post}`,
+                level: "comment"
             }
         }[schemaName];
 
@@ -71,7 +77,7 @@ function protect(schemaName, method) {
         }
 
         //save post to locals so next callback has access to post - reduce lookup times
-        res.locals.item = item;
+        res.locals.item = (schemaName === "comment") ? item.post : item;
 
         //return / next
         next();
