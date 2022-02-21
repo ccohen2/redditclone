@@ -35,7 +35,7 @@ router.patch("/", protect("post", "patch"), asyncWrap(async (req, res, next) => 
 }));
 
 //delete route
-router.delete("/", asyncWrap(async (req, res, next) => {
+router.delete("/", protect("post", "delete"), asyncWrap(async (req, res, next) => {
     const { subreddit, id } = req.params;
     let post = await Post.findByIdAndDelete(id);
     if (post === null) {

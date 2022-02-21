@@ -105,17 +105,17 @@ app.get("/logout", (req, res, next) => {
 app.post("/logout", (req, res, next) => {
     try {
         //checks if user is logged in - if so logs them out
-        if (req.session.user !== null ) {
+        if (req.session.user !== null && typeof (req.session.user) !== "undefined") {
             req.session.user = null;
         }
-        else if (req.session.user === null) {
-            res.send("NOT LOGGED IN");
+        else if (req.session.user === null || typeof (req.session.user) === "undefined") {
+            throw new ClientError(403, "Not Logged in", "user", "post");
         }
     } 
     //sets user to null - in case user variable in session hasn't been initialized
     catch {
         req.session.user = null;
-        res.send("NOT LOGGED IN")
+        res.send("NOT LOGGED IN");
     }
 
     //redirect to home page with flash message
