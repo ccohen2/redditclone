@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("../required/mongoose");
 const { asyncWrap } = require("../required/helperFunctions")
 const { ClientError } = require("../required/errors");
-const { Post, Subreddit } = require("../required/schemas");
+const { Post, Subreddit, User } = require("../required/schemas");
 const postRouter = require("./post");
 
 const router = express.Router({mergeParams: true});
@@ -52,6 +52,34 @@ router.post("/", asyncWrap(async (req, res, next) => {
     }
 
     res.redirect(`${subreddit}`);
+}));
+
+//subscribes user to subreddit
+router.post("/sub", asyncWrap(async (req, res, next) => {
+    const username = req.session.user;
+    //gets user from db
+    const user = await User.findOne({username: username});
+    if (user === null) {
+        throw new ClientError(404, `Unable fo find user ${user}`, "user", "get");
+    }
+    //gets subreddit
+    const subreddit = await Subreddit.findOne({name: req.params.subreddit});
+    if (subreddit === null) {
+        throw new ClientError(404, `Unable fo find subreddit ${req.params.subreddit}`, "subreddit", "get");
+    }
+
+    //adds id to user only if not already subscribed
+    if (!user.subscriptions.includes(subreddit._id)) {
+        user.subscriptions.push(subreddit._id);
+    }
+
+    //updates user with subscription
+    const finished = await user.save();
+    if (finished != user) {
+        throw new ClientError(404, `Unabled to subscribed to ${req.params.subreddit} - server side error`, "user", "post");
+    }
+
+    res.redirect(`/r/${req.params.subreddit}`);
 }));
 
 //handles posts

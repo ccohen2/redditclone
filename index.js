@@ -27,6 +27,7 @@ app.use(session({
 
 //extress settings - abosolute path, get data from forms, overide
 app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.json())
 app.use(express.urlencoded({ "extended": true }));
 app.use(methodOverride('_method'));
 
