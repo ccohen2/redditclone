@@ -20,7 +20,7 @@ function asyncWrap(func) {
 }
 
 
-//WORKING FOR POSTS - NOT WORKING FOR COMMENTS - NOT TESTED FOR SUBREDDIT
+//WORKING FOR POSTS AND COMMENTS - NOT TESTED FOR SUBREDDIT
 //function to protect routes - takes in which schema to use and which method is being protected as input
 //method is used for error messages only - no difference in logic
 //req, res, next same as in express route callbacks

@@ -18,10 +18,22 @@ router.get("/", asyncWrap(async (req, res, next) => {
     
     //gets posts and builds list of posts to view
     let posts = await Post.find({_id: page.posts}).sort({datePosted: -1});
+
+    //gets subList for user
+    let subscribed = false;
+    if (req.session.user !== null && req.session.user !== undefined) {
+        const user = await User.findOne({username: req.session.user});
+        if (user === null) {
+            throw new ClientError(404, `Unable fo find user ${user}`, "user", "get");
+        }
+        subscribed = user.subscriptions.includes(page._id);
+    }
+
     res.render("redditPage", { "page": page, 
     "posts": posts, 
     "subreddit": subreddit, 
     "user": req.session.user,
+    "subscribed": subscribed,
     "originalUrl": req.originalUrl });  
 }));
 
@@ -54,8 +66,12 @@ router.post("/", asyncWrap(async (req, res, next) => {
     res.redirect(`${subreddit}`);
 }));
 
-//subscribes user to subreddit
+//handles subscription management - based on query string
 router.post("/sub", asyncWrap(async (req, res, next) => {
+    let sub = true;
+    if (req.query.q === "unsub") {
+        sub = false;
+    }
     const username = req.session.user;
     //gets user from db
     const user = await User.findOne({username: username});
@@ -69,8 +85,13 @@ router.post("/sub", asyncWrap(async (req, res, next) => {
     }
 
     //adds id to user only if not already subscribed
-    if (!user.subscriptions.includes(subreddit._id)) {
+    if (sub && !user.subscriptions.includes(subreddit._id)) {
         user.subscriptions.push(subreddit._id);
+    }
+
+    //unsubs only if already subbed
+    if (!sub && user.subscriptions.includes(subreddit._id)) {
+        user.subscriptions.splice(user.subscriptions.indexOf(subreddit._id), 1);
     }
 
     //updates user with subscription
