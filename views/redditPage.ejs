@@ -17,9 +17,19 @@
         <h1>
             <%= page.name %>
         </h1>
-        <p>
-            <%= page.description %>: <%= page.subscribers %> Subscribers
-        </p>
+        <div>
+            <p>
+                <%= page.description %>: <%= page.subscribers %> Subscribers
+            </p>
+            <div>
+                <% if (user === null || user === undefined) { %>
+                    <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
+                <% } else { %>
+                    <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
+                <% } %> 
+                <a href=<%= `http://localhost:3000/home` %> >Reddit Home</a>
+            </div>
+        </div>
     </header>
 
     <!-- Holds posts for page -->

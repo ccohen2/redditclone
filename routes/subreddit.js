@@ -18,7 +18,11 @@ router.get("/", asyncWrap(async (req, res, next) => {
     
     //gets posts and builds list of posts to view
     let posts = await Post.find({_id: page.posts}).sort({datePosted: -1});
-    res.render("redditPage", { "page": page, "posts": posts, "subreddit": subreddit });  
+    res.render("redditPage", { "page": page, 
+    "posts": posts, 
+    "subreddit": subreddit, 
+    "user": req.session.user,
+    "originalUrl": req.originalUrl });  
 }));
 
 

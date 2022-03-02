@@ -1,0 +1,37 @@
+
+main {
+    display: flex;
+    flex-direction: column;
+
+}
+
+section {
+    margin: 1em 4em;
+}
+
+legend a {
+    color: inherit;
+    text-decoration: inherit;
+    text-transform: capitalize;
+    font-size: 1.4em;
+    letter-spacing: .2em;
+
+    transition: font-weight .2s ease-in-out;
+}
+
+legend a:hover {
+    color: inherit;
+    font-weight: 500;
+}
+
+.card {
+    border: .13rem solid #8d99ae;
+    transition: border .2s ease-in-out;
+    transition: transform .2s ease-in-out;
+}
+
+.card:hover {
+    border-color: #2b2d42;
+    transform: scale(1.05);
+    cursor: pointer;
+}

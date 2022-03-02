@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 const methodOverride = require("method-override");
 const session = require("express-session");
-const { User } = require("./required/schemas");
+const { Post, Subreddit, User } = require("./required/schemas");
 const { ClientError } = require("./required/errors");
 const { asyncWrap } = require("./required/helperFunctions");
 const bcrypt = require("bcrypt");
@@ -117,6 +117,55 @@ app.get("/logout", (req, res, next) => {
     //redirect to home page with flash message
     res.redirect(req.query.q);
 });
+
+
+
+//home - try moving this to /r but before /r/:subreddit - everything should work as long as no /r/:something in /r
+app.get("/home", asyncWrap(async (req, res, next) => {
+    const user = req.session.user;
+    const subscriptions = [];
+
+    //specific to if user is signed in
+    //gets subscribed subreddits
+    if (user !== null && user !== undefined) {
+        //gets user from db
+        const userObj = await User.findOne({username: user});
+        if (userObj === null) {
+            throw new ClientError(404, `Unable fo find user ${user}`, "user", "get");
+        }
+
+        //gets 5 random subsriptions
+        let sampleSubs = [...userObj.subscriptions];
+        for (let i = 0; i < Math.min(userObj.subscriptions.length, 5); i++) {
+
+            //gets random subreddit - change algorithm - there are currently potential duplicates
+            let index = Math.floor(Math.random() * sampleSubs.length);
+            const subreddit = await Subreddit.findById(sampleSubs[index]);
+
+            //checks subreddit exists
+            if (subreddit === null) {
+                throw new ClientError(404, `Unable fo find subreddit`, "subreddit", "get");
+            }
+
+            //gets 6 posts from subreddit
+            let posts = await Post.find({_id: subreddit.posts});
+            posts = posts.slice(0, Math.min(posts.length, 6));
+
+            subscriptions.push({
+                name: subreddit.name, 
+                posts: posts
+            });
+
+            sampleSubs.splice(index, 1);
+        }
+    }
+
+
+    res.render("home.ejs", {
+        "user": user,
+        "subscriptions": subscriptions,
+        "originalUrl": req.originalUrl });
+}));
 
 
 //test link for username

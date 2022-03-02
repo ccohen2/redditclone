@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Home</title>
+
+    <%- include("partials/styles.ejs") %>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <header id="header">
+        <h1>
+            <%= `Reddit Clone` %>
+        </h1>
+        <div>
+            <% if (user === null || user === undefined) { %>
+                <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
+            <% } else { %>
+                <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
+            <% } %>
+        </div>
+    </header>
+
+    <!-- Reddit Navigation -->
+    <main>
+        <!-- only display if user is logged in -->
+        <% if (user != null && user != undefined) { %>
+            <!-- Subscribed Reddits - logged in user - CURRENT PROJECT -->
+            <section>
+                <% if (subscriptions.length > 0) { %> 
+                    <h2>Subscribed Subreddits</h2>
+                    <!-- cycles through subscribed subreddits -->
+                    <% for (let i = 0; i < subscriptions.length; i++) { %>
+                        <fieldset>
+                            <% const subscription = subscriptions[i]%> 
+                            <legend><a href=<%= `/r/${subscription.name}` %> ><%= subscription.name %></a></legend>
+                            
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                            <!-- cycles through posts in subscripted subreddit -->
+                            <% for (let j = 0; j < subscription.posts.length; j++) { %>
+                                <% let post = subscription.posts[j] %>
+                                <div class="col">
+                                  <div class="card">
+                                    <img src=<%= `${post.img}` %>  class="card-img-top" alt="No Image">
+                                    <div class="card-body">
+                                      <h5 class="card-title"><%= `${post.title}` %> </h5>
+                                      <!-- shorten this to max number of characters - some post text go for too long -->
+                                      <p class="card-text"><%= `${post.text}` %> </p>
+                                    </div>
+
+                                    <!-- hidden link - used to make post clickable -->
+                                    <a href=<%=`/r/${subscription.name}/${post._id}` %> name="link"></a>
+                                  </div>
+                                </div>
+                            <% } %>
+                        </fieldset>
+                    <% } %> 
+                <% } %>
+            </section>
+        <% } %> 
+
+        <!-- Newest Posts -->
+
+        <!-- Trending Today -->
+
+        <!-- Most Popular Reddits -->
+
+        <!-- Categories -->
+    </main>
+
+    <script src="/js/home.js"></script>
+</body>
+</html>

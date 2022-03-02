@@ -52,7 +52,8 @@ postSchema.statics.getComment = async function([postId, commentIndex]) {
 //User Schema
 const userSchema = new mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    subscriptions: [mongoose.ObjectId]
 });
 
 //need to handle bcyrpt errors

@@ -19,7 +19,37 @@ header h1 {
     letter-spacing: .2em;
 }
 
+header div {
+    display: flex;
+    justify-content: space-between;
+}
 
+header div a {
+    font-size: 1.3em;
+    color: inherit;
+    font-style: inherit;
+    text-decoration: none;
+    text-align: right;
+    
+    margin: 0 16px 8px 0;
+
+    transition: all ease-in-out .5s;
+}
+
+header div a:hover {
+    color: #8d99ae;
+}
+
+h2 {
+
+}
+
+fieldset {
+    border: .2rem solid #2b2d42;
+    margin: 1em 0em;
+    padding: .5em .5em;
+    border-radius: 10px;
+}
 
 
 /* posts */

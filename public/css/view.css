@@ -13,22 +13,6 @@
     margin-bottom: 8px;
 }
 
-#header div a {
-    font-size: 1.3em;
-    color: inherit;
-    font-style: inherit;
-    text-decoration: none;
-    text-align: right;
-    
-    margin: 0 16px 8px 0;
-
-    transition: all ease-in-out .5s;
-}
-
-#header div a:hover {
-    color: #8d99ae;
-}
-
 .postHolder {
     width: 95%;
     display: flex;
@@ -114,16 +98,4 @@
         margin-left: 2em;
         align-self: start;
     }
-} 
-
-.post h2 {
-
-}
-
-.post .postText {
-
-}
-
-.post .postFooter {
-
 }
