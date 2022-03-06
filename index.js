@@ -148,9 +148,9 @@ app.get("/home", asyncWrap(async (req, res, next) => {
                 throw new ClientError(404, `Unable fo find subreddit`, "subreddit", "get");
             }
 
-            //gets 6 posts from subreddit
+            //gets 4 most recent posts from subreddit
             let posts = await Post.find({_id: subreddit.posts});
-            posts = posts.slice(0, Math.min(posts.length, 6));
+            posts = posts.slice(0, Math.min(posts.length, 4));
 
             subscriptions.push({
                 name: subreddit.name, 
