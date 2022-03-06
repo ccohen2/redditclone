@@ -14,15 +14,19 @@ subredditName = subredditName[subredditName.length - 1];
 subBtn.addEventListener("click", (e) => {
     if (subBtn.textContent === "Subscribe") {
         axios.post(`http://localhost:3000/r/${subredditName}/sub`)
+        .then(() => {
+            subBtn.textContent = "Unsubscribe";
+        })
         .catch(e => {
             console.log("Unable to subscribe", e)});
-        subBtn.textContent = "Unsubscribe";
     }
     else if (subBtn.textContent === "Unsubscribe") {
         axios.post(`http://localhost:3000/r/${subredditName}/sub?q=unsub`)
+        .then(() => {
+            subBtn.textContent = "Subscribe";
+        })
         .catch(e => {
             console.log("Unable to unsubscribe", e)});
-        subBtn.textContent = "Subscribe";
     }
 
 });

@@ -53,10 +53,6 @@ fieldset {
 
 
 /* posts */
-.postHolder {
-    width: 70%;
-}
-
 .post {
     background-color: #edf2f4;
     padding: 2em;
@@ -89,8 +85,43 @@ fieldset {
     width: 100%;
 }
 
+.postHolder {
+    width: 95%;
+}
+
 #postField {
-    width: 70%;
+    width: 95%;
+}
+
+ @media (min-width: 700px) {
+    .postHolder {
+        width: 70%;
+    }
+
+    #postField {
+        width: 70%;
+    }
+ }
+
+ @media (min-width: 1100px) {
+    .post {
+        width: 48%;
+    }
+
+    .postHolder {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .postHolder {
+        width: 90%;
+    }
+
+    #postField {
+        width: 90%;
+    }
 }
 
 
@@ -138,16 +169,6 @@ form .form-group button {
 
 .form-group input:focus-visible, .form-group textarea:focus-visible {
     outline: none;
-}
-
-@media (max-width: 700px) {
-    .postHolder {
-        width: 95%;
-    }
-
-    #postField {
-        width: 95%;
-    }
 }
 
 
