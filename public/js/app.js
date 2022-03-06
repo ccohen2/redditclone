@@ -19,10 +19,10 @@ subBtn.addEventListener("click", (e) => {
             subBtn.classList.add("spinner");
             setTimeout(() => {
                 subBtn.textContent = "Unsubscribe";
-            }, 1500);
+            }, 500);
             setTimeout(() => {
                 subBtn.classList.remove("spinner");
-            }, 3000);
+            }, 1000);
         })
         .catch(e => {
             console.log("Unable to subscribe", e)});
@@ -34,10 +34,10 @@ subBtn.addEventListener("click", (e) => {
             subBtn.classList.add("spinner");
             setTimeout(() => {
                 subBtn.textContent = "Subscribe";
-            }, 1500);
+            }, 500);
             setTimeout(() => {
                 subBtn.classList.remove("spinner");
-            }, 3000);
+            }, 1000);
         })
         .catch(e => {
             console.log("Unable to unsubscribe", e)});

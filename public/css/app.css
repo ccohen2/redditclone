@@ -211,7 +211,7 @@ form .form-group button {
     animation-name: spinner;
     animation-timing-function: ease-in-out;
     animation-iteration-count: 1;
-    animation-duration: 3s;
+    animation-duration: 1s;
     transform-style: preserve-3d;
     text-align:center;
 }
@@ -220,7 +220,7 @@ form .form-group button {
       transform: rotate(0turn);
     }
     to {
-      transform: rotate(10turn);
+      transform: rotate(2turn);
     }
   }
   
