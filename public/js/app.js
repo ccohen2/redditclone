@@ -15,7 +15,14 @@ subBtn.addEventListener("click", (e) => {
     if (subBtn.textContent === "Subscribe") {
         axios.post(`http://localhost:3000/r/${subredditName}/sub`)
         .then(() => {
-            subBtn.textContent = "Unsubscribe";
+            //animations and text changing
+            subBtn.classList.add("spinner");
+            setTimeout(() => {
+                subBtn.textContent = "Unsubscribe";
+            }, 1500);
+            setTimeout(() => {
+                subBtn.classList.remove("spinner");
+            }, 3000);
         })
         .catch(e => {
             console.log("Unable to subscribe", e)});
@@ -23,7 +30,14 @@ subBtn.addEventListener("click", (e) => {
     else if (subBtn.textContent === "Unsubscribe") {
         axios.post(`http://localhost:3000/r/${subredditName}/sub?q=unsub`)
         .then(() => {
-            subBtn.textContent = "Subscribe";
+            //andimations and text changing
+            subBtn.classList.add("spinner");
+            setTimeout(() => {
+                subBtn.textContent = "Subscribe";
+            }, 1500);
+            setTimeout(() => {
+                subBtn.classList.remove("spinner");
+            }, 3000);
         })
         .catch(e => {
             console.log("Unable to unsubscribe", e)});

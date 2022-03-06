@@ -40,8 +40,8 @@ header div a:hover {
     color: #8d99ae;
 }
 
-h2 {
-
+#subscribe {
+    transition: all ease-in-out .5s;
 }
 
 fieldset {
@@ -204,3 +204,23 @@ form .form-group button {
 .btn-danger:focus {
     background-color: #D90429;
 }
+
+
+/* Animations */
+.spinner {
+    animation-name: spinner;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+    animation-duration: 3s;
+    transform-style: preserve-3d;
+    text-align:center;
+}
+  @keyframes spinner {
+    from {
+      transform: rotate(0turn);
+    }
+    to {
+      transform: rotate(10turn);
+    }
+  }
+  
