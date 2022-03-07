@@ -3,7 +3,7 @@ const mongoose = require("../required/mongoose");
 const { asyncWrap } = require("../required/helperFunctions")
 const { ClientError } = require("../required/errors");
 const { Post, Subreddit, User } = require("../required/schemas");
-const postRouter = require("./post");
+const bcrypt = require("bcrypt");
 
 const router = express.Router({mergeParams: true});
 

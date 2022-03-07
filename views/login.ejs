@@ -12,7 +12,7 @@
 <body>
     <h1>Login</h1>
 
-    <form action=<%= `/login?q=${query}` %> method="post">
+    <form action=<%= `/session/login?q=${query}` %> method="post">
         <div class="form-group row">
             <label for="username">Username </label>
             <input class="form-control" type="text" name="username" placeholder="Enter Username">
