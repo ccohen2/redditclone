@@ -12,7 +12,9 @@ search page for searching through subreddits - want related searches too, not ju
 
 
 SHORT TERM
-implement flash error messages - remove weird res.sends for server side errors
+implement flash messages 
+    - remove weird res.sends for server side errors (error flashes)
+    - login and signup flashes on sucess
 404 page
 handle bcyrpt erros
 make fields required for schemas and handle errors

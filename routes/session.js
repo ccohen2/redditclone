@@ -7,9 +7,29 @@ const bcrypt = require("bcrypt");
 
 const router = express.Router({mergeParams: true});
 
+//login function - used by login and signup
+const login = async function(req, res, next) {
+    const { username, password } = req.body;
+    const user = await User.findOne({username: username});
+    //checks user exists
+    if (user === null) {
+        throw new ClientError(404, `Unable fo find user ${username}`, "user", "get");
+    }
+
+    //logs user in
+    if (bcrypt.compare(password, user.password)) {
+        req.session.user = username;
+    }
+    else {
+        res.send("Invalid username or password!!!");
+    }
+
+    return true;
+};
+
 //registration
 router.get("/signup", (req, res, next) => {
-    res.render("signup.ejs");
+    res.render("signup.ejs", {"query": req.query.q});
 });
 
 router.post("/signup", asyncWrap(async (req, res, next) => {
@@ -26,8 +46,11 @@ router.post("/signup", asyncWrap(async (req, res, next) => {
         throw new ClientError(500, `Unabled to create new user - server side error`, "user", "post");
     }
 
+    //logs user in
+    await login(req, res, next);
+
     //redirect to reddit homepage - once implemented homepage
-    res.send("Created new user!!");
+    res.redirect(req.query.q);
 }));
 
 //user authentication
@@ -37,20 +60,8 @@ router.get("/login", (req, res, next) => {
 });
 
 router.post("/login", asyncWrap(async (req, res, next) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({username: username});
-    //checks user exists
-    if (user === null) {
-        throw new ClientError(404, `Unable fo find user ${username}`, "user", "get");
-    }
-
-    //logs user in
-    if (bcrypt.compare(password, user.password)) {
-        req.session.user = username;
-    }
-    else {
-        res.send("Invalid username or password!!!");
-    }
+    //calls login function
+    await login(req, res, next);
 
     res.redirect(req.query.q);
 }));
