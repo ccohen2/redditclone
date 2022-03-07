@@ -14,13 +14,11 @@ search page for searching through subreddits - want related searches too, not ju
 SHORT TERM
 implement flash error messages - remove weird res.sends for server side errors
 404 page
-user log in - need to log in to post or gives guest name use cookies for guest accounts - 
-    need to migrate ownership once account is created
 handle bcyrpt erros
 make fields required for schemas and handle errors
+change posting to users with accounts only
 
 non-rush
-subscribe button
 add last modified
 separate models / non direction stuff into separate file
 add seeds.js file for initial population of database

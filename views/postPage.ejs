@@ -19,11 +19,7 @@
             <%= `r/${subreddit}/${id} Discussion` %>
         </h1>
         <div>
-            <% if (user === null || user === undefined) { %>
-                <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
-            <% } else { %>
-                <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
-            <% } %> 
+            <%- include("partials/loginBtns.ejs") %>
             <a href=<%= `http://localhost:3000/r/${subreddit}` %> >Subreddit Home</a>
         </div>
     </header>

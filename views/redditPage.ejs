@@ -20,20 +20,10 @@
         <div>
             <p>
                 <%= page.description %>: <%= page.subscribers %> Subscribers
-                <% if (user !== null && user !== undefined) { %>
-                    <% if (!subscribed) { %> 
-                        <button class="btn btn-secondary" id="subscribe">Subscribe</button>
-                    <% } else { %> 
-                        <button class="btn btn-secondary" id="subscribe">Unsubscribe</button>
-                    <% } %> 
-                <% } %> 
+                <%- include("partials/subscriptionBtns.ejs") %> 
             </p>
             <div>
-                <% if (user === null || user === undefined) { %>
-                    <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
-                <% } else { %>
-                    <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
-                <% } %> 
+                <%- include("partials/loginBtns.ejs") %> 
                 <a href=<%= `http://localhost:3000/home` %> >Reddit Home</a>
             </div>
         </div>
