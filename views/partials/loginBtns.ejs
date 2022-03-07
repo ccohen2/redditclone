@@ -1,5 +1,5 @@
 <% if (user === null || user === undefined) { %>
-    <a href=<%= `http://localhost:3000/login?q=${originalUrl}` %> >Login</a> 
+    <a href=<%= `http://localhost:3000/session/login?q=${originalUrl}` %> >Login</a> 
 <% } else { %>
-    <a href=<%= `http://localhost:3000/logout?q=${originalUrl}` %> >Logout</a> 
+    <a href=<%= `http://localhost:3000/session/logout?q=${originalUrl}` %> >Logout</a> 
 <% } %> 
