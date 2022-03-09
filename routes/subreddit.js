@@ -40,11 +40,15 @@ router.get("/", asyncWrap(async (req, res, next) => {
 
 //new post post route - full reddit post - updated for db - working
 router.post("/", asyncWrap(async (req, res, next) => {
+    if (req.session.user === null || req.session.user === undefined) {
+        throw new ClientError(402, "User must be signed in to post", "post", "post");
+    }
+
     const { subreddit } = req.params;
     let body = req.body;
     let newPost = new Post ({
         title: body.title,
-        author: body.username,
+        author: req.session.user,
         text: body.text,
         img: body.imgSrc,
         comments: [],

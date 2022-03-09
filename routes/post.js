@@ -57,6 +57,10 @@ router.delete("/", protect("post", "delete"), asyncWrap(async (req, res, next) =
 
 //comment post route - creates new comment and appends it to post comment array
 router.post("/", asyncWrap(async (req, res, next) => {
+    if (req.session.user === null || req.session.user === undefined) {
+        throw new ClientError(402, "User must be signed in to post comment", "comment", "post");
+    }
+
     const {subreddit, id} = req.params;
     const post = await Post.findById(id);
     //checks post does exist
@@ -68,7 +72,7 @@ router.post("/", asyncWrap(async (req, res, next) => {
     const comment = {
         _id: new mongoose.Types.ObjectId(),
         text: body.text,
-        author: body.username,
+        author: req.session.user,
         datePosted: curDate,
         lastModified: curDate
     };
